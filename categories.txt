@@ -1,0 +1,81 @@
+Category: থ্রিলার ও গোয়েন্দা
+SubCategory: ক্লাসিক গোয়েন্দা
+
+id: thriller_01
+title: ফেলুদার গোয়েন্দাগিরি
+author: সত্যজিৎ রায়
+image: https://images.unsplash.com/photo-1585802585723-577bd55d9d7c?w=500
+textFile: feluda.txt
+audioUrl:
+
+Category: ভৌতিক ও অতিপ্রাকৃত
+SubCategory: গা ছমছমে ভূতের গল্প
+
+id: horror_01
+title: নিশীথ রাতের ডাক
+author: অজানা
+image: https://images.unsplash.com/photo-1505635552518-3448ff116af3?w=500
+textFile: nishith.txt
+audioUrl:
+
+Category: ইতিহাস ও পুরাণ
+SubCategory: ঐতিহাসিক যুদ্ধ ও সংগ্রাম
+
+id: kurukshetra_01
+title: কুরুক্ষেত্রের শেষ দিন
+author: ব্যাসদেব
+year: কলিযুগ প্রারম্ভ
+language: সংস্কৃত
+image: https://images.unsplash.com/photo-1599839619722-39751411ea63?w=500
+textFile: kurukshetra.txt
+audioUrl:
+
+Category: কল্পবিজ্ঞান ও ফ্যান্টাসি
+SubCategory: সায়েন্স ফিকশন
+
+id: scifi_01
+title: মঙ্গল গ্রহের ডায়েরি
+author: কল্পবিজ্ঞান লেখক
+image: https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=500
+textFile: mars_diary.txt
+audioUrl:
+
+Category: সামাজিক ও রোমান্টিক
+SubCategory: প্রেমের গল্প
+
+id: romance_01
+title: বর্ষার প্রথম কদম ফুল
+author: হুমায়ূন আহমেদ
+image: https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500
+textFile: borsha.txt
+audioUrl:
+
+Category: বিশ্বসাহিত্য
+SubCategory: রাশিয়ান ক্লাসিক
+
+id: world_01
+title: বোকা ইভান
+author: লিও তলস্তয়
+image: https://images.unsplash.com/photo-1456086272160-b223648608f1?w=500
+textFile: ivan.txt
+audioUrl:
+
+Category: হাসির গল্প ও অণুগল্প
+SubCategory: রম্যরচনা
+
+id: comedy_01
+title: হাবুল মামার কাণ্ড
+author: শিব্রাম চক্রবর্তী
+image: https://images.unsplash.com/photo-1544928147-79a2dbc1f389?w=500
+textFile: habul_mama.txt
+audioUrl:
+
+Category: শিশুসাহিত্য ও কিশোর গল্প
+SubCategory: রূপকথা ও নীতিগল্প
+
+id: kids_01
+title: সোনার কাঠি রূপোর কাঠি
+author: দক্ষিণারঞ্জন মিত্র মজুমদার
+image: https://images.unsplash.com/photo-1558021212-51b6ecfa0db9?w=500
+textFile: thakumar_jhuli.txt
+audioUrl:
