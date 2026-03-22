@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>গল্পের আসর - Ultimate eReader Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
+        
+        /* Themes Variable */
+        :root {
+            --bg-color: #f3f4f6; --text-color: #334155; --paper-bg: #fdfbf7;
+            --dropcap-color: #d97706; --border-color: #e2e8f0; --card-bg: #ffffff;
+        }
+        body.theme-dark {
+            --bg-color: #0f172a; --text-color: #cbd5e1; --paper-bg: #1e293b;
+            --dropcap-color: #fbbf24; --border-color: #334155; --card-bg: #1e293b;
+        }
+        body.theme-sepia {
+            --bg-color: #f5eedc; --text-color: #5c4033; --paper-bg: #fdf6e3;
+            --dropcap-color: #8b4513; --border-color: #e6d5b8; --card-bg: #faebd7;
+        }
+
+        body { font-family: 'Noto Serif Bengali', serif; background-color: var(--bg-color); color: var(--text-color); transition: all 0.3s; }
+        .paper-texture { background-color: var(--paper-bg); transition: background-color 0.3s; }
+        body:not(.theme-dark):not(.theme-sepia) .paper-texture { background-image: radial-gradient(#e5dfc5 1px, transparent 0); background-size: 40px 40px; }
+        .theme-card { background-color: var(--card-bg); border-color: var(--border-color); }
+
+        /* Drop Cap & Images (Fixed Bug) */
+        p.drop-cap-para::first-letter { font-size: 3.5rem; float: left; line-height: 1; padding-right: 8px; color: var(--dropcap-color); font-weight: bold; }
+        .inline-story-img { float: left; width: 100%; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        @media (min-width: 768px) { .inline-story-img { width: 40%; margin-right: 20px; float: left; } }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes mobilePageTurn { 0% { transform: perspective(1000px) rotateY(90deg); opacity: 0; transform-origin: right; } 100% { transform: perspective(1000px) rotateY(0deg); opacity: 1; transform-origin: right; } }
+        .animate-flip { animation: mobilePageTurn 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) forwards; }
+        
+        /* Canvas Drawing Mode */
+        canvas.drawing-active { pointer-events: auto !important; touch-action: none; cursor: crosshair; }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden relative">
+
+    <header class="bg-slate-900 text-white shadow-md fixed top-0 w-full z-50 px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="showDashboard()">
+            <i class="fa-solid fa-book-open-reader text-2xl text-amber-400"></i>
+            <h1 class="text-xl font-bold tracking-wide text-amber-400 hidden sm:block">গল্প চক্রের আসর</h1>
+        </div>
+        
+        <div id="dash-tools" class="flex items-center">
+            <a href="https://wa.me/916296378080?text=নমস্কার, আমি গল্পের আসর অ্যাপ থেকে মেসেজ করছি। আমার মতামত এবং নতুন গল্পের অনুরোধ হলো:" target="_blank" class="flex items-center gap-1.5 bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md shadow-md text-sm font-bold transition">
+                <i class="fa-brands fa-whatsapp text-lg"></i> <span class="hidden sm:inline">মতামত জানান</span>
+            </a>
+        </div>
+
+        <div id="player-tools" class="hidden flex items-center gap-2 sm:gap-3">
+            <select id="theme-selector" onchange="changeTheme(this.value)" class="bg-slate-800 text-sm border border-slate-600 rounded px-2 py-1 outline-none text-white cursor-pointer hidden md:block">
+                <option value="light">☀️ Light</option><option value="sepia">☕ Sepia</option><option value="dark">🌙 Dark</option>
+            </select>
+            <div class="flex bg-slate-800 rounded border border-slate-600 overflow-hidden">
+                <button onclick="changeFontSize(-1)" class="px-3 py-1 hover:bg-slate-700 transition border-r border-slate-600"><i class="fa-solid fa-a text-xs"></i>-</button>
+                <button onclick="changeFontSize(1)" class="px-3 py-1 hover:bg-slate-700 transition"><i class="fa-solid fa-a text-sm"></i>+</button>
+            </div>
+            <button onclick="showDashboard()" class="text-sm bg-amber-600 hover:bg-amber-500 font-bold px-3 py-1.5 rounded transition shadow flex items-center gap-1">
+                <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline">বইয়ের তাক</span>
+            </button>
+        </div>
+    </header>
+
+    <main id="dashboard-view" class="mt-14 flex-1 overflow-y-auto p-4 md:p-8 relative">
+        <div class="max-w-6xl mx-auto pb-20">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                <h2 class="text-2xl font-bold border-l-4 border-amber-500 pl-3">বইয়ের তাক</h2>
+                <div class="relative w-full md:w-1/3">
+                    <input type="text" id="search-bar" onkeyup="filterStories()" placeholder="গল্প বা লেখক খুঁজুন..." class="w-full bg-white border border-slate-300 text-slate-800 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block pl-10 p-2.5 shadow-sm outline-none">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-slate-400"></i></div>
+                </div>
+            </div>
+
+            <div id="bookmark-banner" class="hidden mb-6 bg-gradient-to-r from-amber-500 to-orange-400 rounded-lg p-4 text-white shadow-md flex justify-between items-center cursor-pointer hover:shadow-lg transition" onclick="resumeLastRead()">
+                <div>
+                    <p class="text-xs font-semibold opacity-90 uppercase tracking-wider mb-1"><i class="fa-solid fa-bookmark mr-1"></i> পড়া চালিয়ে যান</p>
+                    <h3 id="bookmark-title" class="font-bold text-lg"></h3>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xl"></i>
+            </div>
+
+            <div id="dash-loader" class="text-center py-20 text-amber-500"><i class="fa-solid fa-spinner fa-spin text-4xl"></i></div>
+            <div id="dash-error" class="hidden text-center py-20 text-red-500"><p id="dash-error-msg"></p></div>
+            <div id="categories-container" class="space-y-4 hidden"></div>
+        </div>
+    </main>
+
+    <main id="player-view" class="mt-14 mb-16 flex-1 overflow-y-auto paper-texture hidden relative">
+        <div id="story-loader" class="text-center py-20 text-amber-600 hidden"><i class="fa-solid fa-circle-notch fa-spin text-4xl"></i></div>
+        
+        <div id="book-container" class="p-5 md:p-10 max-w-4xl mx-auto min-h-full hidden pb-32 relative">
+            <div class="mb-6 border-b-2 border-amber-200 pb-4 relative z-20">
+                <h2 id="story-title" class="text-3xl font-bold leading-snug"></h2>
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-3 gap-3">
+                    <p class="text-lg font-bold text-amber-600 tracking-wide" id="story-author"></p>
+                    <select id="voice-style" class="bg-transparent border border-gray-400 rounded px-2 py-1 text-sm outline-none text-slate-700 w-full sm:w-auto">
+                        <option value="normal">সাধারণ (Normal)</option>
+                        <option value="serious">গ গম্ভীর (Serious)</option>
+                        <option value="calm">শান্ত (Calm)</option>
+                        <option value="sweet">মিষ্টি (Sweet)</option>
+                        <option value="fast">দ্রুত (Fast)</option>
+                        <option value="dramatic">নাটকীয় (Dramatic)</option>
+                        <option value="energetic">উদ্যমী (Energetic)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="relative w-full">
+                <div id="story-text" class="text-lg leading-loose text-justify transition-all duration-300 relative z-0"></div>
+                <canvas id="drawing-canvas" class="absolute top-0 left-0 w-full h-full pointer-events-none z-10"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <div id="drawing-toolbar" class="fixed bottom-[68px] left-0 w-full bg-slate-800 p-2 shadow-xl z-40 hidden flex-row justify-center items-center gap-2 sm:gap-4 border-t border-slate-700">
+        <button onclick="toggleDrawingMode('pencil')" id="btn-pencil" class="w-10 h-10 rounded-full bg-amber-500 text-white shadow transition" title="পেন্সিল"><i class="fa-solid fa-pencil"></i></button>
+        <button onclick="toggleDrawingMode('highlighter')" id="btn-highlighter" class="w-10 h-10 rounded-full bg-slate-700 text-white shadow transition" title="হাইলাইটার"><i class="fa-solid fa-highlighter"></i></button>
+        <button onclick="toggleDrawingMode('eraser')" id="btn-eraser" class="w-10 h-10 rounded-full bg-slate-700 text-white shadow transition" title="ইরেজার"><i class="fa-solid fa-eraser"></i></button>
+        <div class="w-px h-8 bg-slate-600 mx-1"></div>
+        <button onclick="clearCanvas()" class="w-10 h-10 rounded-full bg-slate-700 text-red-500 hover:text-white hover:bg-red-500 shadow transition" title="সব মুছুন"><i class="fa-solid fa-trash-can"></i></button>
+        <button onclick="disableDrawing()" class="w-10 h-10 rounded-full bg-green-500 text-white hover:bg-green-600 shadow transition ml-2" title="পড়া চালিয়ে যান"><i class="fa-solid fa-check"></i></button>
+    </div>
+
+    <div id="bottom-player" class="fixed bottom-0 w-full bg-slate-900 border-t border-slate-700 z-50 px-4 py-3 flex justify-between items-center hidden">
+        <div class="text-sm font-semibold text-slate-300 truncate w-1/3 flex items-center gap-2">
+            <i id="status-icon" class="fa-solid fa-circle-check text-green-500"></i>
+            <span id="status-text" class="hidden sm:inline">পড়তে প্রস্তুত</span>
+        </div>
+        
+        <div class="flex gap-2 sm:gap-4 w-2/3 justify-end items-center">
+            <button onclick="showDrawingToolbar()" id="btn-draw-toggle" class="w-10 h-10 bg-slate-700 hover:bg-slate-600 text-white rounded-full transition shadow mr-1 sm:mr-3 border border-slate-600" title="দাগ দিন">
+                <i class="fa-solid fa-pen-nib"></i>
+            </button>
+            
+            <button onclick="smartPlay()" class="w-10 h-10 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition active:scale-95 shadow"><i class="fa-solid fa-play"></i></button>
+            <button onclick="smartPause()" class="w-10 h-10 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition active:scale-95 shadow"><i class="fa-solid fa-pause"></i></button>
+            <button onclick="smartStop()" class="w-10 h-10 bg-red-500 hover:bg-red-400 text-white rounded-full transition active:scale-95 shadow"><i class="fa-solid fa-stop"></i></button>
+        </div>
+    </div>
+    
+    <audio id="html-audio-player" class="hidden"></audio>
+
+    <script>
+        const dashView = document.getElementById('dashboard-view');
+        const playerView = document.getElementById('player-view');
+        const bottomPlayer = document.getElementById('bottom-player');
+        const dashTools = document.getElementById('dash-tools');
+        const playerTools = document.getElementById('player-tools');
+        const categoriesContainer = document.getElementById('categories-container');
+        const storyTextContainer = document.getElementById('story-text');
+        
+        let allStoriesDB = [];
+        let currentStoryData = null;
+        let ttsRawText = ""; 
+        let currentFontSize = 18; 
+        let isUsingMp3 = false;
+        const synth = window.speechSynthesis;
+        let utterance = null;
+        let scrollTimeout; 
+
+        // Canvas Variables
+        const canvas = document.getElementById('drawing-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let activeTool = 'none'; 
+
+        function initSettings() {
+            const savedTheme = localStorage.getItem('app_theme') || 'light';
+            document.getElementById('theme-selector').value = savedTheme;
+            changeTheme(savedTheme);
+            const savedSize = localStorage.getItem('font_size');
+            if(savedSize) {
+                currentFontSize = parseInt(savedSize);
+                storyTextContainer.style.fontSize = `${currentFontSize}px`;
+            }
+        }
+
+        function changeTheme(theme) {
+            document.body.className = `h-screen flex flex-col overflow-hidden theme-${theme}`;
+            localStorage.setItem('app_theme', theme);
+        }
+
+        function changeFontSize(step) {
+            currentFontSize += (step * 2); 
+            if(currentFontSize < 14) currentFontSize = 14;
+            if(currentFontSize > 32) currentFontSize = 32;
+            storyTextContainer.style.fontSize = `${currentFontSize}px`;
+            localStorage.setItem('font_size', currentFontSize);
+            setTimeout(resizeCanvas, 300);
+        }
+
+        function filterStories() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const cards = document.querySelectorAll('.story-card');
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const author = card.getAttribute('data-author').toLowerCase();
+                if (title.includes(query) || author.includes(query)) card.style.display = 'block';
+                else card.style.display = 'none';
+            });
+        }
+
+        function parsePlainTextData(rawText) {
+            const lines = rawText.split('\n');
+            const data = [];
+            allStoriesDB = []; 
+            let currentCat = null, currentSub = null, currentStory = null;
+
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+                const colonIndex = line.indexOf(':');
+                if (colonIndex === -1) continue;
+                const key = line.substring(0, colonIndex).trim();
+                const value = line.substring(colonIndex + 1).trim();
+
+                if (key === 'Category') {
+                    if (currentStory && currentSub) { currentSub.stories.push(currentStory); allStoriesDB.push(currentStory); }
+                    currentStory = null; currentSub = null;
+                    currentCat = { name: value, subCategories: [] };
+                    data.push(currentCat);
+                } else if (key === 'SubCategory') {
+                    if (currentStory && currentSub) { currentSub.stories.push(currentStory); allStoriesDB.push(currentStory); }
+                    currentStory = null;
+                    currentSub = { name: value, stories: [] };
+                    if (currentCat) currentCat.subCategories.push(currentSub);
+                } else if (key === 'id') {
+                    if (currentStory && currentSub) { currentSub.stories.push(currentStory); allStoriesDB.push(currentStory); }
+                    currentStory = { id: value };
+                } else if (currentStory) {
+                    currentStory[key] = value;
+                }
+            }
+            if (currentStory && currentSub) { currentSub.stories.push(currentStory); allStoriesDB.push(currentStory); }
+            return data;
+        }
+
+        async function fetchCategories() {
+            document.getElementById('dash-loader').classList.remove('hidden');
+            try {
+                const response = await fetch(`categories.txt?v=${new Date().getTime()}`);
+                if (!response.ok) throw new Error("File not found");
+                const data = parsePlainTextData(await response.text());
+                renderDashboard(data);
+                checkBookmark(); 
+            } catch (error) {
+                document.getElementById('dash-loader').classList.add('hidden');
+                document.getElementById('dash-error').classList.remove('hidden');
+                document.getElementById('dash-error-msg').innerText = "ডেটা লোড ব্যর্থ: " + error.message;
+            }
+        }
+
+        function renderDashboard(data) {
+            categoriesContainer.innerHTML = '';
+            let accordionStates = JSON.parse(localStorage.getItem('accordion_states') || '{}');
+            let starredStories = JSON.parse(localStorage.getItem('starred_stories') || '[]');
+
+            data.forEach((category, catIndex) => {
+                const catId = `cat-${catIndex}`;
+                const isHidden = accordionStates[catId] === false ? true : false; 
+                
+                const catDiv = document.createElement('div');
+                catDiv.className = 'theme-card rounded-lg shadow border overflow-hidden mb-4 animate-fade';
+                
+                catDiv.innerHTML = `
+                    <button onclick="toggleAccordion('${catId}')" class="w-full px-5 py-4 flex justify-between items-center bg-slate-800 text-white hover:bg-slate-700 transition">
+                        <h3 class="text-lg font-bold"><i class="fa-solid fa-folder-open text-amber-400 mr-2"></i> ${category.name}</h3>
+                        <i id="icon-${catId}" class="fa-solid fa-chevron-down transition-transform ${isHidden ? '' : 'rotate-180'}"></i>
+                    </button>
+                    <div id="${catId}" class="${isHidden ? 'hidden' : ''} p-4 space-y-6"></div>
+                `;
+                categoriesContainer.appendChild(catDiv);
+                
+                const subContainer = document.getElementById(catId);
+                
+                category.subCategories.forEach((subCat) => {
+                    const subDiv = document.createElement('div');
+                    subDiv.innerHTML = `<h4 class="text-md font-bold mb-3 border-b border-gray-300 pb-1 text-amber-600"><i class="fa-solid fa-layer-group mr-1"></i> ${subCat.name}</h4>`;
+                    
+                    const grid = document.createElement('div');
+                    grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4';
+
+                    subCat.stories.forEach(story => {
+                        const imgUrl = story.image ? `${story.image}?v=${new Date().getTime()}` : 'https://via.placeholder.com/300x200?text=No+Image';
+                        const isStarred = starredStories.includes(story.id);
+                        
+                        const card = document.createElement('div');
+                        card.className = 'story-card border theme-card rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition group relative';
+                        card.setAttribute('data-title', story.title);
+                        card.setAttribute('data-author', story.author);
+                        card.onclick = () => openPlayer(story);
+                        
+                        card.innerHTML = `
+                            <button onclick="toggleStar(event, '${story.id}', this)" class="absolute top-2 left-2 z-10 w-8 h-8 flex items-center justify-center bg-black/50 rounded-full backdrop-blur-sm transition hover:scale-110 shadow">
+                                <i class="fa-solid fa-star ${isStarred ? 'text-amber-400' : 'text-slate-300'} text-sm"></i>
+                            </button>
+                            
+                            <div class="h-32 overflow-hidden bg-slate-200 relative">
+                                <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" loading="lazy">
+                                ${story.audioUrl ? '<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded shadow"><i class="fa-solid fa-headphones text-green-400"></i></div>' : ''}
+                            </div>
+                            <div class="p-3">
+                                <h5 class="font-bold text-lg mb-1 leading-tight group-hover:text-amber-600 transition">${story.title}</h5>
+<p class="text-xs opacity-70 mb-1"><i class="fa-solid fa-pen-nib mr-1"></i> ${story.author}</p>
+${story.year || story.language ? `<p class="text-[10px] text-slate-500 font-medium"><i class="fa-regular fa-calendar-days mr-1"></i> ${story.year || 'অজানা'} &nbsp;|&nbsp; <i class="fa-solid fa-language mr-1"></i> ${story.language || 'অজানা'}</p>` : ''}
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                    subDiv.appendChild(grid);
+                    subContainer.appendChild(subDiv);
+                });
+            });
+            document.getElementById('dash-loader').classList.add('hidden');
+            categoriesContainer.classList.remove('hidden');
+        }
+
+        function toggleStar(event, storyId, btnElement) {
+            event.stopPropagation(); 
+            let starred = JSON.parse(localStorage.getItem('starred_stories') || '[]');
+            const icon = btnElement.querySelector('i');
+            
+            if (starred.includes(storyId)) {
+                starred = starred.filter(id => id !== storyId);
+                icon.classList.remove('text-amber-400');
+                icon.classList.add('text-slate-300');
+            } else {
+                starred.push(storyId);
+                icon.classList.remove('text-slate-300');
+                icon.classList.add('text-amber-400');
+            }
+            localStorage.setItem('starred_stories', JSON.stringify(starred));
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            const isHidden = content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+
+            let states = JSON.parse(localStorage.getItem('accordion_states') || '{}');
+            states[id] = !isHidden;
+            localStorage.setItem('accordion_states', JSON.stringify(states));
+        }
+
+        function checkBookmark() {
+            const lastId = localStorage.getItem('last_read_story_id');
+            if (lastId) {
+                const story = allStoriesDB.find(s => s.id === lastId);
+                if (story) {
+                    document.getElementById('bookmark-title').innerText = story.title;
+                    document.getElementById('bookmark-banner').classList.remove('hidden');
+                }
+            }
+        }
+        
+        function resumeLastRead() {
+            const lastId = localStorage.getItem('last_read_story_id');
+            const story = allStoriesDB.find(s => s.id === lastId);
+            if(story) openPlayer(story);
+        }
+
+        playerView.addEventListener('scroll', () => {
+            if (currentStoryData) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    localStorage.setItem(`scroll_pos_${currentStoryData.id}`, playerView.scrollTop);
+                }, 200); 
+            }
+        });
+
+        function showDashboard() {
+            smartStop();
+            disableDrawing(); 
+            document.getElementById('search-bar').value = '';
+            filterStories(); 
+            checkBookmark(); 
+            playerView.classList.add('hidden');
+            bottomPlayer.classList.add('hidden');
+            playerTools.classList.add('hidden');
+            dashTools.classList.remove('hidden');
+            dashView.classList.remove('hidden');
+        }
+
+        function openPlayer(story) {
+            dashView.classList.add('hidden');
+            dashTools.classList.add('hidden');
+            playerView.classList.remove('hidden');
+            bottomPlayer.classList.remove('hidden');
+            playerTools.classList.remove('hidden');
+            currentStoryData = story;
+            
+            localStorage.setItem('last_read_story_id', story.id);
+            fetchStoryText(story);
+        }
+
+        // --- UPDATED RENDER LOGIC FOR DROP CAP FIX ---
+        async function fetchStoryText(story) {
+            const loader = document.getElementById('story-loader');
+            const book = document.getElementById('book-container');
+            book.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            try {
+                const response = await fetch(`${story.textFile}?v=${new Date().getTime()}`);
+                if (!response.ok) throw new Error("Text file not found");
+                const rawText = await response.text();
+
+                document.getElementById('story-title').innerText = story.title;
+                
+                let authorHtml = `<i class="fa-solid fa-pen-nib mr-1"></i> ${story.author}`;
+if(story.year || story.language) {
+    authorHtml += `<span class="block text-sm text-slate-500 font-normal mt-1"><i class="fa-regular fa-calendar-days mr-1"></i> রচনাকাল: ${story.year || 'অজানা'} | <i class="fa-solid fa-language mr-1"></i> ভাষা: ${story.language || 'অজানা'}</span>`;
+}
+document.getElementById('story-author').innerHTML = authorHtml;
+                
+                storyTextContainer.innerHTML = formatStoryText(rawText);
+                storyTextContainer.style.fontSize = `${currentFontSize}px`;
+
+                ttsRawText = rawText.replace(/---CHAPTER:.*?---/g, '').replace(/\[IMAGE:\s*(.*?)\]/g, '').trim();
+
+                const ap = document.getElementById('html-audio-player');
+                if (story.audioUrl) {
+                    isUsingMp3 = true;
+                    ap.src = `${story.audioUrl}?v=${new Date().getTime()}`;
+                    document.getElementById('voice-style').parentElement.classList.add('hidden');
+                } else {
+                    isUsingMp3 = false;
+                    ap.src = "";
+                    document.getElementById('voice-style').parentElement.classList.remove('hidden');
+                }
+
+                loader.classList.add('hidden');
+                book.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    resizeCanvas();
+                    restoreDrawing();
+                }, 300);
+
+                const savedScroll = localStorage.getItem(`scroll_pos_${story.id}`);
+                if (savedScroll) setTimeout(() => { playerView.scrollTop = parseInt(savedScroll); }, 350);
+                else playerView.scrollTop = 0;
+
+            } catch (error) {
+                loader.innerHTML = `<p class="text-red-500 text-center font-bold px-4">Error: ${error.message}</p>`;
+            }
+        }
+
+        function formatStoryText(text) {
+            const parts = text.split(/---CHAPTER:\s*(.*?)---/);
+            let html = '';
+            if(parts.length === 1) html += renderChapterBlocks('', parts[0]);
+            else {
+                for (let i = 1; i < parts.length; i += 2) html += renderChapterBlocks(parts[i], parts[i+1]);
+            }
+            return html;
+        }
+
+        function renderChapterBlocks(title, content) {
+            let html = '';
+            if(title) html += `<h3 class="text-2xl font-bold mt-10 mb-4 border-b border-amber-300 pb-2 clear-both text-amber-600">${title}</h3>`;
+            
+            const paragraphs = content.split('\n\n').filter(p => p.trim() !== '');
+            html += `<div class="clear-both">`;
+            
+            let foundFirstText = false;
+
+            paragraphs.forEach(p => {
+                processedContent = processedContent.replace(/\[AD:\s*(.*?)\s*\|\s*(.*?)\]/g, (match, text, url) => `<a href="${url.trim()}" target="_blank" class="block w-full my-6 p-4 bg-amber-50 border-2 border-dashed border-amber-300 rounded-xl text-amber-700 font-bold text-center hover:bg-amber-100 hover:shadow-md transition cursor-pointer no-underline"><i class="fa-solid fa-bullhorn mr-2"></i>${text.trim()}</a>`);
+                processedContent = processedContent.replace(/\n/g, '<br>');
+
+                // Check if this paragraph contains actual text (not just an image)
+                let textOnly = processedContent.replace(/<[^>]+>/g, '').trim();
+
+                if (textOnly.length === 0) {
+                    // Only image, render as a div so it doesn't break the Drop Cap
+                    html += `<div class="mb-4">${processedContent}</div>`;
+                } else {
+                    let paraClass = "mb-4";
+                    // Apply Drop Cap ONLY to the first actual text paragraph
+                    if (!foundFirstText) {
+                        paraClass += " drop-cap-para";
+                        foundFirstText = true;
+                    }
+                    html += `<p class="${paraClass}">${processedContent}</p>`;
+                }
+            });
+            
+            html += `</div>`;
+            return html;
+        }
+
+        // Canvas Drawing
+        function resizeCanvas() {
+            canvas.width = storyTextContainer.offsetWidth;
+            canvas.height = storyTextContainer.scrollHeight;
+        }
+
+        function showDrawingToolbar() {
+            document.getElementById('drawing-toolbar').classList.remove('hidden');
+            document.getElementById('drawing-toolbar').classList.add('flex');
+            document.getElementById('btn-draw-toggle').classList.add('hidden');
+            toggleDrawingMode('pencil');
+        }
+
+        function disableDrawing() {
+            document.getElementById('drawing-toolbar').classList.add('hidden');
+            document.getElementById('drawing-toolbar').classList.remove('flex');
+            document.getElementById('btn-draw-toggle').classList.remove('hidden');
+            activeTool = 'none';
+            canvas.classList.remove('drawing-active');
+            saveDrawing();
+        }
+
+        function toggleDrawingMode(tool) {
+            activeTool = tool;
+            canvas.classList.add('drawing-active');
+            
+            ['pencil', 'highlighter', 'eraser'].forEach(t => document.getElementById(`btn-${t}`).classList.replace('bg-amber-500', 'bg-slate-700') || document.getElementById(`btn-${t}`).classList.replace('bg-yellow-400', 'bg-slate-700') || document.getElementById(`btn-${t}`).classList.replace('bg-red-400', 'bg-slate-700'));
+            
+            if(tool === 'pencil') document.getElementById('btn-pencil').classList.replace('bg-slate-700', 'bg-amber-500');
+            else if(tool === 'highlighter') document.getElementById('btn-highlighter').classList.replace('bg-slate-700', 'bg-yellow-400');
+            else if(tool === 'eraser') document.getElementById('btn-eraser').classList.replace('bg-slate-700', 'bg-red-400');
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            saveDrawing();
+        }
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;   
+            const scaleY = canvas.height / rect.height; 
+            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+        }
+
+        const startDraw = (e) => {
+            if(activeTool === 'none') return;
+            e.preventDefault(); 
+            isDrawing = true;
+            ctx.beginPath();
+            const pos = getMousePos(e);
+            ctx.moveTo(pos.x, pos.y);
+            
+            if(activeTool === 'pencil') {
+                ctx.globalCompositeOperation = "source-over";
+                ctx.strokeStyle = "#ef4444"; 
+                ctx.lineWidth = 2;
+                ctx.lineCap = "round";
+            } else if(activeTool === 'highlighter') {
+                ctx.globalCompositeOperation = "source-over";
+                ctx.strokeStyle = "rgba(250, 204, 21, 0.4)"; 
+                ctx.lineWidth = 15;
+                ctx.lineCap = "butt";
+            } else if(activeTool === 'eraser') {
+                ctx.globalCompositeOperation = "destination-out";
+                ctx.lineWidth = 20;
+                ctx.lineCap = "round";
+            }
+        };
+
+        const draw = (e) => {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const pos = getMousePos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        };
+
+        const stopDraw = () => {
+            if (isDrawing) {
+                isDrawing = false;
+                ctx.closePath();
+                saveDrawing(); 
+            }
+        };
+
+        canvas.addEventListener("mousedown", startDraw);
+        canvas.addEventListener("mousemove", draw);
+        canvas.addEventListener("mouseup", stopDraw);
+        canvas.addEventListener("mouseout", stopDraw);
+        canvas.addEventListener("touchstart", startDraw, {passive: false});
+        canvas.addEventListener("touchmove", draw, {passive: false});
+        canvas.addEventListener("touchend", stopDraw);
+
+        function saveDrawing() {
+            if(!currentStoryData) return;
+            localStorage.setItem('draw_' + currentStoryData.id, canvas.toDataURL());
+        }
+
+        function restoreDrawing() {
+            if(!currentStoryData) return;
+            const dataURL = localStorage.getItem('draw_' + currentStoryData.id);
+            if(dataURL) {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                };
+                img.src = dataURL;
+            }
+        }
+
+        // Smart Audio
+        function smartPlay() {
+            if (isUsingMp3) {
+                document.getElementById('html-audio-player').play();
+                updateStatus("স্টুডিও অডিও", "fa-volume-high", "text-green-500", true);
+            } else {
+                if (synth.paused) synth.resume();
+                else {
+                    synth.cancel();
+                    utterance = new SpeechSynthesisUtterance(ttsRawText);
+                    utterance.lang = 'bn-BD';
+                    const style = document.getElementById('voice-style').value;
+                    switch(style) {
+                        case 'serious': utterance.rate = 0.8; utterance.pitch = 0.5; break;
+                        case 'calm': utterance.rate = 0.85; utterance.pitch = 0.9; break;
+                        case 'sweet': utterance.rate = 0.95; utterance.pitch = 1.4; break;
+                        case 'fast': utterance.rate = 1.6; utterance.pitch = 1.0; break;
+                        case 'dramatic': utterance.rate = 0.75; utterance.pitch = 0.4; break;
+                        case 'energetic': utterance.rate = 1.3; utterance.pitch = 1.5; break;
+                        default: utterance.rate = 0.9; utterance.pitch = 1.0; break;
+                    }
+                    utterance.onend = () => updateStatus("পড়া শেষ", "fa-check", "text-green-500");
+                    synth.speak(utterance);
+                }
+                updateStatus("এআই পড়ছে", "fa-volume-high", "text-amber-500", true);
+            }
+        }
+        function smartPause() {
+            isUsingMp3 ? document.getElementById('html-audio-player').pause() : synth.pause();
+            updateStatus("স্থগিত", "fa-pause", "text-gray-400");
+        }
+        function smartStop() {
+            if(isUsingMp3) { let ap = document.getElementById('html-audio-player'); ap.pause(); ap.currentTime = 0; } 
+            else synth.cancel();
+            updateStatus("বন্ধ", "fa-stop", "text-gray-400");
+        }
+        function updateStatus(t, i, c, s=false) {
+            document.getElementById('status-text').innerText = t;
+            document.getElementById('status-icon').className = `fa-solid ${i} ${c} ${s?'fa-spin':''}`;
+        }
+
+        initSettings();
+        fetchCategories();
+    </script>
+</body>
+</html>
