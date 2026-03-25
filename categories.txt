@@ -1,81 +1,348 @@
 Category: থ্রিলার ও গোয়েন্দা
-SubCategory: ক্লাসিক গোয়েন্দা
+SubCategory: ক্লাসিক মার্ডার মিস্ট্রি
 
 id: thriller_01
-title: ফেলুদার গোয়েন্দাগিরি
-author: সত্যজিৎ রায়
+title: ডেমো গল্প ১
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
 image: https://images.unsplash.com/photo-1585802585723-577bd55d9d7c?w=500
-textFile: feluda.txt
-audioUrl:
+textFile: story1.txt
+audioUrl: 
+
+SubCategory: মনস্তাত্ত্বিক থ্রিলার ও সাসপেন্স
+
+id: thriller_02
+title: ডেমো গল্প ২
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1585802585723-577bd55d9d7c?w=500
+textFile: story2.txt
+audioUrl: 
+
+SubCategory: গুপ্তচরবৃত্তি ও ক্রাইম
+
+id: thriller_03
+title: ডেমো গল্প ৩
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1585802585723-577bd55d9d7c?w=500
+textFile: story3.txt
+audioUrl: 
+
 
 Category: ভৌতিক ও অতিপ্রাকৃত
-SubCategory: গা ছমছমে ভূতের গল্প
+SubCategory: গথিক ও ডার্ক হরর
 
 id: horror_01
-title: নিশীথ রাতের ডাক
-author: অজানা
+title: ডেমো গল্প ৪
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
 image: https://images.unsplash.com/photo-1505635552518-3448ff116af3?w=500
-textFile: nishith.txt
-audioUrl:
+textFile: story4.txt
+audioUrl: 
+
+SubCategory: প্যারানরমাল ও অলৌকিক
+
+id: horror_02
+title: ডেমো গল্প ৫
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1505635552518-3448ff116af3?w=500
+textFile: story5.txt
+audioUrl: 
+
+SubCategory: লোককথার ভূত ও কিংবদন্তি
+
+id: horror_03
+title: ডেমো গল্প ৬
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1505635552518-3448ff116af3?w=500
+textFile: story6.txt
+audioUrl: 
+
+
+Category: সামাজিক ও জীবনমুখী
+SubCategory: বাস্তবতার টানাপোড়েন
+
+id: social_01
+title: ডেমো গল্প ৭
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=500
+textFile: story7.txt
+audioUrl: 
+
+SubCategory: গ্রামীণ ও লোকজ জীবন
+
+id: social_02
+title: ডেমো গল্প ৮
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=500
+textFile: story8.txt
+audioUrl: 
+
+SubCategory: শহুরে জীবনের গল্প
+
+id: social_03
+title: ডেমো গল্প ৯
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=500
+textFile: story9.txt
+audioUrl: 
+
+
+Category: প্রেম ও রোমান্স
+SubCategory: নিখাদ ও ধ্রুপদী প্রেম
+
+id: romance_01
+title: ডেমো গল্প ১০
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500
+textFile: story10.txt
+audioUrl: 
+
+SubCategory: বিয়োগান্তক বা ট্র্যাজিক প্রেম
+
+id: romance_02
+title: ডেমো গল্প ১১
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500
+textFile: story11.txt
+audioUrl: 
+
+SubCategory: মনস্তাত্ত্বিক প্রেম ও বিরহ
+
+id: romance_03
+title: ডেমো গল্প ১২
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500
+textFile: story12.txt
+audioUrl: 
+
 
 Category: ইতিহাস ও পুরাণ
 SubCategory: ঐতিহাসিক যুদ্ধ ও সংগ্রাম
 
-id: kurukshetra_01
-title: কুরুক্ষেত্রের শেষ দিন
-author: ব্যাসদেব
-year: কলিযুগ প্রারম্ভ
-language: সংস্কৃত
+id: history_01
+title: ডেমো গল্প ১৩
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
 image: https://images.unsplash.com/photo-1599839619722-39751411ea63?w=500
-textFile: kurukshetra.txt
-audioUrl:
+textFile: story13.txt
+audioUrl: 
+
+SubCategory: প্রাচীন মহাকাব্য ও পুরাণ
+
+id: history_02
+title: ডেমো গল্প ১৪
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1599839619722-39751411ea63?w=500
+textFile: story14.txt
+audioUrl: 
+
+SubCategory: সাম্রাজ্যের উত্থান-পতন
+
+id: history_03
+title: ডেমো গল্প ১৫
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1599839619722-39751411ea63?w=500
+textFile: story15.txt
+audioUrl: 
+
 
 Category: কল্পবিজ্ঞান ও ফ্যান্টাসি
-SubCategory: সায়েন্স ফিকশন
+SubCategory: ভবিষ্যতের পৃথিবী ও মহাকাশ
 
 id: scifi_01
-title: মঙ্গল গ্রহের ডায়েরি
-author: কল্পবিজ্ঞান লেখক
+title: ডেমো গল্প ১৬
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
 image: https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=500
-textFile: mars_diary.txt
-audioUrl:
+textFile: story16.txt
+audioUrl: 
 
-Category: সামাজিক ও রোমান্টিক
-SubCategory: প্রেমের গল্প
+SubCategory: ডিস্টোপিয়া ও টাইম-ট্রাভেল
 
-id: romance_01
-title: বর্ষার প্রথম কদম ফুল
-author: হুমায়ূন আহমেদ
-image: https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500
-textFile: borsha.txt
-audioUrl:
+id: scifi_02
+title: ডেমো গল্প ১৭
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=500
+textFile: story17.txt
+audioUrl: 
 
-Category: বিশ্বসাহিত্য
-SubCategory: রাশিয়ান ক্লাসিক
+SubCategory: জাদুবিদ্যা ও রূপকথা
 
-id: world_01
-title: বোকা ইভান
-author: লিও তলস্তয়
-image: https://images.unsplash.com/photo-1456086272160-b223648608f1?w=500
-textFile: ivan.txt
-audioUrl:
+id: scifi_03
+title: ডেমো গল্প ১৮
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=500
+textFile: story18.txt
+audioUrl: 
 
-Category: হাসির গল্প ও অণুগল্প
-SubCategory: রম্যরচনা
+
+Category: হাসির গল্প ও রম্যরচনা
+SubCategory: সমাজ-ব্যঙ্গ ও স্যাটায়ার
 
 id: comedy_01
-title: হাবুল মামার কাণ্ড
-author: শিব্রাম চক্রবর্তী
+title: ডেমো গল্প ১৯
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
 image: https://images.unsplash.com/photo-1544928147-79a2dbc1f389?w=500
-textFile: habul_mama.txt
-audioUrl:
+textFile: story19.txt
+audioUrl: 
 
-Category: শিশুসাহিত্য ও কিশোর গল্প
-SubCategory: রূপকথা ও নীতিগল্প
+SubCategory: নির্ভেজাল হাসির গল্প
 
-id: kids_01
-title: সোনার কাঠি রূপোর কাঠি
-author: দক্ষিণারঞ্জন মিত্র মজুমদার
-image: https://images.unsplash.com/photo-1558021212-51b6ecfa0db9?w=500
-textFile: thakumar_jhuli.txt
+id: comedy_02
+title: ডেমো গল্প ২০
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1544928147-79a2dbc1f389?w=500
+textFile: story20.txt
+audioUrl: 
+
+SubCategory: ডার্ক কমেডি
+
+id: comedy_03
+title: ডেমো গল্প ২১
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1544928147-79a2dbc1f389?w=500
+textFile: story21.txt
+audioUrl: 
+
+
+Category: দর্শন ও মনস্তত্ত্ব
+SubCategory: অস্তিত্ববাদ ও জীবনের অর্থ
+
+id: phil_01
+title: ডেমো গল্প ২২
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500
+textFile: story22.txt
+audioUrl: 
+
+SubCategory: মানবমনের জটিলতা
+
+id: phil_02
+title: ডেমো গল্প ২৩
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500
+textFile: story23.txt
+audioUrl: 
+
+SubCategory: নীতিগল্প ও রূপক কাহিনি
+
+id: phil_03
+title: ডেমো গল্প ২৪
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500
+textFile: story24.txt
+audioUrl: 
+
+
+Category: ভ্রমণ কাহিনী ও দিনপঞ্জি
+SubCategory: দুঃসাহসিক অ্যাডভেঞ্চার
+
+id: travel_01
+title: ডেমো গল্প ২৫
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500
+textFile: story25.txt
+audioUrl: 
+
+SubCategory: দেশ-বিদেশের ভ্রমণ অভিজ্ঞতা
+
+id: travel_02
+title: ডেমো গল্প ২৬
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500
+textFile: story26.txt
+audioUrl: 
+
+SubCategory: ঐতিহাসিক দিনপঞ্জি ও ডায়েরি
+
+id: travel_03
+title: ডেমো গল্প ২৭
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500
+textFile: story27.txt
+audioUrl: 
+
+
+Category: প্রবন্ধ, আত্মজীবনী ও চিঠিপত্র
+SubCategory: অনুপ্রেরণামূলক আত্মজীবনী
+
+id: essay_01
+title: ডেমো গল্প ২৮
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1456086272160-b223648608f1?w=500
+textFile: story28.txt
+audioUrl: 
+
+SubCategory: কালজয়ী চিঠিপত্র
+
+id: essay_02
+title: ডেমো গল্প ২৯
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1456086272160-b223648608f1?w=500
+textFile: story29.txt
+audioUrl: 
+
+SubCategory: জীবন ও সমাজভাবনামূলক প্রবন্ধ
+
+id: essay_03
+title: ডেমো গল্প ৩০
+author: লেখকের নাম
+year: রচনাকাল
+language: ভাষা
+image: https://images.unsplash.com/photo-1456086272160-b223648608f1?w=500
+textFile: story30.txt
 audioUrl:
